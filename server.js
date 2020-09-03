@@ -18,13 +18,17 @@ const io = socket(server);
 io.on('connection', (socket) => {
     socket.emit('updateData', (tasks));
 
-    socket.on('addTask', (task) => {
-        tasks.push(task);
-        socket.broadcast.emit('addTask', (task));
+    socket.on('addTask', ({id, taskName}) => {
+        tasks.push({
+            id: id,
+            taskName: taskName,
+        });
+        socket.broadcast.emit('addTask', ({id, taskName}));
     });
 
-    socket.on('removeTask', (taskIndex) => {
+    socket.on('removeTask', (taskToRemove) => {
+        const taskIndex = tasks.indexOf(taskToRemove);
         tasks.splice(taskIndex, 1);
-        socket.broadcast.emit('removeTask', ({index: taskIndex, serverRun: true}));
+        socket.broadcast.emit('removeTask', taskToRemove, {serverRun: true});
     });
 });
