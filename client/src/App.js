@@ -24,9 +24,10 @@ class App extends React.Component {
       tasks: updatedTaskList,
     });
 
-    if(serverRun === false) {
-      this.socket.emit('removeTask', (taskToRemove));
+    if(serverRun) {
+      return;
     }
+    this.socket.emit('removeTask', (taskToRemove));
   }
 
   handleChange = (event) => {
